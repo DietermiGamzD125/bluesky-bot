@@ -1,0 +1,30 @@
+name: Bluesky Bot
+
+on:
+  schedule:
+    - cron: '0 */12 * * *'  # every 12 hours
+  workflow_dispatch:         # allows manual run
+
+jobs:
+  run-bot:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - run: pip install -r requirements.txt
+
+      - name: Create env file
+        run: |
+          echo "SOURCE_HANDLE=${{ secrets.SOURCE_HANDLE }}" >> .env
+          echo "DESTINATION_HANDLE=${{ secrets.DESTINATION_HANDLE }}" >> .env
+          echo "SRC_APP_PASS=${{ secrets.SRC_APP_PASS }}" >> .env
+          echo "DST_APP_PASS=${{ secrets.DST_APP_PASS }}" >> .env
+          echo "CHAR_LIMIT=${{ secrets.CHAR_LIMIT }}" >> .env
+          echo "BSKY_HOST_URL=${{ secrets.BSKY_HOST_URL }}" >> .env
+
+      - run: python src/main.py
