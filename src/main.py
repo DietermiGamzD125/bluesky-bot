@@ -78,23 +78,18 @@ def generate_and_post_example():
         logging.error("Error posting to destination Bluesky account: %s", e)
 
 try:
-    while True:
-        current_time = datetime.now()
-        refresh_interval = calculate_refresh_interval()
-        next_refresh = calculate_next_refresh(current_time, refresh_interval)
+    source_posts = get_account_posts(source_client, source_did)
+    logging.debug("Fetched source posts for DID: %s", source_did)
 
-        logging.debug("Current time: %s, Refresh interval: %s, Next refresh: %s", current_time, refresh_interval, next_refresh)
+    markov = refresh_dataset(markov, source_posts)
+    logging.info("Markov dataset refreshed.")
+    print("Markov dataset refreshed.")
 
-        source_posts = get_account_posts(source_client, source_did)
-        logging.debug("Fetched source posts for DID: %s", source_did)
+    generate_and_post_example()
 
-        markov = refresh_dataset(markov, source_posts)
-        logging.info("Markov dataset refreshed.")
-        print("Markov dataset refreshed.")
+    logging.info("Run complete. Exiting.")
+    print("Run complete. Exiting.")
 
-        generate_and_post_example()
-        sleep_until_next_refresh(next_refresh)
-
-except KeyboardInterrupt:
-    logging.info("Exiting on user interrupt.")
-    print("Exiting on user interrupt.")
+except Exception as e:
+    logging.exception("An error occurred during execution: %s", e)
+    raise
