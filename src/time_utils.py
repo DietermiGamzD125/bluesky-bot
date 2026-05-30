@@ -18,7 +18,7 @@ logging.basicConfig(
 
 def calculate_refresh_interval():
     # Calculate a random refresh interval between 30 minutes to 3 hours
-    refresh_interval = random.randint(1800, 10800)
+    refresh_interval = random.randint(60, 120)
     logging.debug("Calculated refresh interval: %d seconds", refresh_interval)
     return refresh_interval
 
