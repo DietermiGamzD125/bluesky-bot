@@ -26,5 +26,6 @@ jobs:
           echo "DST_APP_PASS=${{ secrets.DST_APP_PASS }}" >> .env
           echo "CHAR_LIMIT=${{ secrets.CHAR_LIMIT }}" >> .env
           echo "BSKY_HOST_URL=${{ secrets.BSKY_HOST_URL }}" >> .env
+          echo "ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true" >> .env
 
       - run: python src/main.py
